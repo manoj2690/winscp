@@ -1,0 +1,5 @@
+open sftp://logview:password@10.112.178.222:22/
+cd /home/logview/VPlogs
+option transfer binary
+get <filename> <destination path>
+close

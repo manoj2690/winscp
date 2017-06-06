@@ -1,0 +1,74 @@
+session url
+
+sftp|ftp|ftps|ftpes|http|https|scp :// [ <username> [ : <password> ] [ ; <fingerprint> ] @ ] <host> [ : <port> ] /
+
+
+
+# Connect
+open sftp://user:password@example.com/ -hostkey="ssh-rsa 2048 xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx:xx"
+# Change remote directory
+cd /home/user
+# Force binary mode transfer
+option transfer binary
+# Download file to the local directory d:\
+get examplefile.txt d:\
+# Disconnect
+close
+
+
+========================================
+
+start batch file using java
+
+Runtime.getRuntime().exec("cmd /c start build.bat");
+
+========================================
+
+http://stackoverflow.com/questions/7789780/how-to-call-an-excel-vba-macro-from-java-code
+
+
+If you can't use JACOB or COM4J you can make a Visual Basic Script and run the script from your Java program.
+
+To create the script open notepad and write something like this:
+
+Set objExcel = CreateObject("Excel.Application")
+Set objWorkbook = objExcel.Workbooks.Open("myExcel.xlsm")
+
+objExcel.Application.Run "myExcel.xlsm!MyMacroName" 
+objExcel.ActiveWorkbook.Close
+
+objExcel.Application.Quit
+WScript.Quit
+Save it as myVBS.vbs and you can call it like this from your Java code:
+
+cmd = "you_path\\myVBS.vbs";
+Runtime.getRuntime().exec(cmd);
+
+==========================================
+using java, http://stackoverflow.com/questions/14617/how-to-retrieve-a-file-from-a-server-via-sftp
+
+import com.jcraft.jsch.*;
+
+public class TestJSch {
+    public static void main(String args[]) {
+        JSch jsch = new JSch();
+        Session session = null;
+        try {
+            session = jsch.getSession("username", "127.0.0.1", 22);
+            session.setConfig("StrictHostKeyChecking", "no");
+            session.setPassword("password");
+            session.connect();
+
+            Channel channel = session.openChannel("sftp");
+            channel.connect();
+            ChannelSftp sftpChannel = (ChannelSftp) channel;
+            sftpChannel.get("remotefile.txt", "localfile.txt");
+            sftpChannel.exit();
+            session.disconnect();
+        } catch (JSchException e) {
+            e.printStackTrace();  
+        } catch (SftpException e) {
+            e.printStackTrace();
+        }
+    }
+}
